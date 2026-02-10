@@ -2,42 +2,79 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>會員方案規格比較表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- 1. SEO 與 分享預覽設定 -->
+    <title>⚠️ 最後倒數 | 2026 會員方案漲價預告</title>
+    <meta name="description" content="2/17 即將調漲。現在加入鎖定舊版價格，享有完整專屬權益與保障。">
+    <meta property="og:title" content="⚠️ 漲價倒數中 | 2026 會員方案最後機會">
+    <meta property="og:description" content="錯過不再有！2/17前使用舊版價格鎖定終身權益。">
+    <meta property="og:type" content="website">
+    
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 React 和 ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <!-- 引入 Babel 用於解析 JSX -->
+    <!-- 引入 Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        /* 自定義捲軸樣式 */
+        /* 優化捲軸體驗 */
         .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
+            height: 6px;
+            width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 4px;
+            background: #f8fafc;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 4px;
+            border-radius: 10px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        /* 載入動畫樣式 */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #dc2626; /* 改為紅色 */
+            width: 40px;
+            height: 40px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* 心跳動畫 */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 1.5s infinite ease-in-out;
+        }
+        
+        /* 修正滾輪問題：只在 body 上設定橫向隱藏，並移除 overscroll-behavior */
+        body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
         }
     </style>
 </head>
-<body class="bg-slate-50">
-    <div id="root"></div>
+<body class="bg-slate-50 text-slate-800 w-full pb-24 md:pb-0"> <!-- 增加底部 padding 給 sticky bar -->
+    
+    <!-- 2. 載入中畫面 -->
+    <div id="root" class="min-h-screen flex flex-col items-center justify-center">
+        <div class="loader mb-4"></div>
+        <div class="text-slate-500 font-medium text-sm">正在載入方案詳情...</div>
+    </div>
 
     <script type="text/babel">
-        // 為了讓這份檔案能單獨運作，我們手動定義圖示組件
         const Icons = {
             Check: (props) => (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="20 6 9 17 4 12"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="20 6 9 17 4 12"/></svg>
             ),
             X: (props) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -53,10 +90,117 @@
             ),
             Crown: (props) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+            ),
+            Info: (props) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            ),
+            ArrowRight: (props) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            ),
+            Alert: (props) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            ),
+            Clock: (props) => (
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             )
         };
 
+        // 倒數計時邏輯
+        const useCountdown = () => {
+             const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+             React.useEffect(() => {
+                const targetDate = new Date("2026-02-17T00:00:00").getTime();
+                
+                const calculate = () => {
+                    const now = new Date().getTime();
+                    const difference = targetDate - now;
+                    if (difference > 0) {
+                        return {
+                            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                            hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                            minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+                            seconds: Math.floor((difference % (1000 * 60)) / 1000)
+                        };
+                    }
+                    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+                };
+
+                setTimeLeft(calculate());
+                const timer = setInterval(() => setTimeLeft(calculate()), 1000);
+                return () => clearInterval(timer);
+            }, []);
+
+            return timeLeft;
+        };
+
+        // 底部 CTA 區塊的大型倒數器
+        const BigCountdownTimer = () => {
+            const timeLeft = useCountdown();
+
+            const TimerBlock = ({ value, label }) => (
+                <div className="flex flex-col items-center mx-1 md:mx-3">
+                    <div className="bg-red-950 rounded-lg p-3 md:p-4 w-16 md:w-24 text-center border-2 border-red-600 shadow-[0_0_15px_rgba(220,38,38,0.4)] relative overflow-hidden">
+                        {/* 玻璃反光效果 */}
+                        <div className="absolute top-0 left-0 w-full h-1/2 bg-white/5"></div>
+                        <span className="text-2xl md:text-4xl font-black text-red-500 font-mono tracking-widest relative z-10">
+                            {value < 10 ? `0${value}` : value}
+                        </span>
+                    </div>
+                    <span className="text-xs md:text-sm text-red-200 mt-2 font-bold uppercase tracking-widest">{label}</span>
+                </div>
+            );
+
+            return (
+                <div className="flex justify-center items-center my-6">
+                    <TimerBlock value={timeLeft.days} label="天" />
+                    <span className="text-red-500 text-2xl font-bold pb-8 animate-pulse">:</span>
+                    <TimerBlock value={timeLeft.hours} label="時" />
+                    <span className="text-red-500 text-2xl font-bold pb-8 animate-pulse">:</span>
+                    <TimerBlock value={timeLeft.minutes} label="分" />
+                    <span className="text-red-500 text-2xl font-bold pb-8 animate-pulse">:</span>
+                    <TimerBlock value={timeLeft.seconds} label="秒" />
+                </div>
+            );
+        };
+
+        // 手機版底部黏性倒數條
+        const StickyMobileFooter = ({ targetUrl }) => {
+             const timeLeft = useCountdown();
+             
+             // 格式化時間： 06天 05:04:33
+             const formatTime = () => {
+                 const pad = (n) => n < 10 ? `0${n}` : n;
+                 return `${timeLeft.days}天 ${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`;
+             };
+
+             return (
+                <div className="fixed bottom-0 left-0 w-full bg-slate-900 border-t border-red-600 shadow-[0_-5px_20px_rgba(0,0,0,0.3)] z-50 p-3 md:hidden flex items-center justify-between gap-3">
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                            <Icons.Alert className="w-3 h-3 text-red-500 animate-pulse" />
+                            <span className="text-xs font-bold text-red-400 tracking-wide">優惠倒數中</span>
+                        </div>
+                        <div className="font-mono text-white font-bold text-lg leading-none tracking-tight">
+                            {formatTime()}
+                        </div>
+                    </div>
+                    <a 
+                        href={targetUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-gradient-to-r from-red-600 to-red-500 text-white font-bold py-2.5 px-6 rounded-full text-sm shadow-lg active:scale-95 transition-transform flex items-center gap-1 animate-heartbeat"
+                    >
+                        立刻加入
+                        <Icons.ArrowRight className="w-4 h-4" />
+                    </a>
+                </div>
+             );
+        };
+
         const ComparisonTable = () => {
+            const targetUrl = "https://truths.club/pricing";
+
             const tiers = [
                 { 
                     id: 'free', 
@@ -111,11 +255,11 @@
                     name: '共構大使', 
                     sub: '黑金 VVIP', 
                     theme: 'gold',
-                    headerBg: 'bg-gradient-to-b from-amber-100/50 to-amber-50/50',
+                    headerBg: 'bg-gradient-to-b from-amber-50 via-amber-50/50 to-white', 
                     borderColor: 'border-amber-200',
                     textColor: 'text-amber-900',
                     accentColor: 'text-amber-600',
-                    btnStyle: 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-400 hover:to-yellow-400 shadow-md shadow-amber-200',
+                    btnStyle: 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-400 hover:to-yellow-400 shadow-lg shadow-amber-200 hover:shadow-xl transition-shadow',
                     highlight: true,
                     icon: <Icons.Crown className="w-4 h-4 inline ml-1 text-yellow-600" />
                 },
@@ -134,7 +278,7 @@
                     category: '優惠權益',
                     items: [
                         { label: '優惠票數', values: ['0', '2', '3', '3', '5'] },
-                        { label: '優惠折扣', values: ['-', '任意 100', '合作200\n自家300', '合作300\n自家500', '合作隨意\n自家 500-700'] },
+                        { label: '優惠折扣', values: ['-', '任意 100', '合作200\n自家300', '合作300\n自家500', '合作300\n自家 500-700'] },
                         { label: '折扣券期限', values: ['-', '30天', '40天', '50天', '60天'] },
                         { label: '朋友共享權限', type: 'boolean', values: [false, false, true, true, true], note: 'VVIP限訂閱朋友' },
                     ]
@@ -143,7 +287,7 @@
                     category: '進階福利',
                     items: [
                         { label: '新品搶先看', values: [false, false, '後台前三天', '後台前七天', '所有小道消息'] },
-                        { label: '肉球限定道具', type: 'boolean', values: [false, false, true, true, true] },
+                        { label: '階級商城限定道具', type: 'boolean', values: [false, false, true, true, true] },
                         { 
                             label: '年繳專屬福利', 
                             type: 'tags', 
@@ -151,8 +295,8 @@
                                 '-', 
                                 '-', 
                                 ['21%折扣', '折扣券期限延長至185天'], 
-                                ['包爽保險', '折扣券期限延長至365天'], 
-                                ['好友推坑工具', '包爽保險 Plus', '指定開箱1000補貼/月'] 
+                                ['🔥 年度限量 40 組', '包爽保險', '折扣券期限延長至365天'], 
+                                ['🔥 年度限量 30 組', '好友推坑工具', '包爽保險 Plus', '指定開箱1000補貼/月'] 
                             ] 
                         },
                     ]
@@ -175,47 +319,53 @@
                     return (
                         <div className="flex items-baseline justify-center gap-1">
                             <span className={`text-sm font-medium ${isVVIP ? 'text-amber-600' : 'text-gray-400'}`}>$</span>
-                            <span className={`text-2xl font-bold tracking-tight ${isVVIP ? 'text-amber-900' : 'text-gray-900'}`}>{value}</span>
+                            <span className={`text-2xl font-bold tracking-tight ${isVVIP ? 'text-amber-900' : 'text-slate-800'}`}>{value}</span>
                         </div>
                     );
                 }
                 
                 if (type === 'boolean') {
                     if (value === true) return <Icons.Check className={`w-5 h-5 mx-auto ${isVVIP ? 'text-amber-500' : tier.accentColor}`} />;
-                    if (value === false) return <Icons.X className={`w-4 h-4 mx-auto ${isVVIP ? 'text-amber-900/20' : 'text-slate-200'}`} />;
+                    if (value === false) return <Icons.X className={`w-4 h-4 mx-auto ${isVVIP ? 'text-amber-900/10' : 'text-slate-200'}`} />;
                 }
 
                 if (type === 'tags' && Array.isArray(value)) {
                     return (
                         <div className="flex flex-col gap-1.5 items-center w-full">
-                            {value.map((tag, idx) => (
-                                <span 
-                                    key={idx} 
-                                    className={`
-                                        px-2 py-1 rounded text-[11px] font-medium w-full max-w-[140px] truncate border
-                                        ${isVVIP 
-                                            ? 'bg-amber-100 text-amber-800 border-amber-200' 
-                                            : 'bg-white text-gray-600 border-gray-200 shadow-sm'
-                                        }
-                                    `}
-                                    title={tag}
-                                >
-                                    {tag}
-                                </span>
-                            ))}
+                            {value.map((tag, idx) => {
+                                const isLimited = tag.includes('限量');
+                                const limitedStyle = isLimited 
+                                    ? 'bg-red-50 text-red-600 border-red-200 font-bold'
+                                    : (isVVIP 
+                                        ? 'bg-amber-100 text-amber-900 border-amber-200' 
+                                        : 'bg-white text-slate-600 border-slate-200 shadow-sm');
+
+                                return (
+                                    <span 
+                                        key={idx} 
+                                        className={`
+                                            px-2 py-1 rounded text-[11px] font-medium w-full max-w-[140px] truncate border
+                                            ${limitedStyle}
+                                        `}
+                                        title={tag}
+                                    >
+                                        {tag}
+                                    </span>
+                                );
+                            })}
                         </div>
                     );
                 }
 
                 if (value === false || value === '-') {
-                    return <span className={`${isVVIP ? 'text-amber-900/30' : 'text-slate-300'}`}>-</span>;
+                    return <span className={`${isVVIP ? 'text-amber-900/20' : 'text-slate-300'}`}>-</span>;
                 }
                 
                 if (typeof value === 'string' && value.includes('\n')) {
                     return (
                         <div className="flex flex-col gap-1">
                             {value.split('\n').map((line, i) => (
-                                <span key={i} className={`block whitespace-nowrap text-xs ${isVVIP ? 'text-amber-900' : 'text-gray-600'}`}>
+                                <span key={i} className={`block whitespace-nowrap text-xs ${isVVIP ? 'text-amber-900' : 'text-slate-500'}`}>
                                     {line}
                                 </span>
                             ))}
@@ -224,29 +374,39 @@
                 }
 
                 return (
-                    <span className={`whitespace-pre-line ${isVVIP ? 'text-amber-950 font-medium' : 'text-gray-700'}`}>
+                    <span className={`whitespace-pre-line ${isVVIP ? 'text-amber-950 font-medium' : 'text-slate-700'}`}>
                         {value}
                     </span>
                 );
             };
 
             return (
-                <div className="min-h-screen bg-slate-50 text-gray-800 p-4 md:p-12 font-sans">
-                    <div className="max-w-7xl mx-auto mb-10 text-center">
-                        <h1 className="text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
+                <div className="min-h-screen bg-slate-50 p-4 pb-20 md:p-12 font-sans w-full overflow-x-hidden relative">
+                    
+                    {/* Header */}
+                    <div className="max-w-7xl mx-auto mb-10 text-center px-2">
+                        {/* 頂部也加上一個小小的急迫感提示 */}
+                        <div className="inline-flex items-center justify-center gap-2 bg-red-50 px-4 py-1.5 rounded-full shadow-sm border border-red-200 mb-4 animate-pulse">
+                             <Icons.Clock className="w-3 h-3 text-red-600" />
+                            <span className="text-xs font-bold text-red-600 uppercase tracking-wide">2/17 即將全面調漲</span>
+                        </div>
+                        
+                        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
                             選擇您的會員方案
                         </h1>
-                        <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-                            真實資訊才是本體，其他都是贈品。<br className="md:hidden" />透明價格，無隱藏費用。
+                        <p className="text-slate-500 text-lg max-w-2xl mx-auto leading-relaxed">
+                            真實資訊才是本體，其他都是贈品。<br className="hidden md:block" />透明價格，無隱藏費用。
                         </p>
                     </div>
 
-                    <div className="max-w-7xl mx-auto relative rounded-2xl shadow-xl overflow-hidden bg-white ring-1 ring-slate-200">
-                        <div className="overflow-x-auto custom-scrollbar">
+                    {/* Table Container */}
+                    <div className="max-w-7xl mx-auto relative rounded-2xl shadow-xl overflow-hidden bg-white ring-1 ring-slate-200 w-full">
+                        <div className="overflow-x-auto custom-scrollbar w-full">
                             <table className="w-full text-sm text-left border-collapse min-w-[900px]">
                                 <thead>
                                     <tr>
-                                        <th className="sticky left-0 top-0 z-20 bg-white p-6 min-w-[160px] border-b border-slate-100">
+                                        {/* Sticky Corner */}
+                                        <th className="sticky left-0 top-0 z-30 bg-white p-6 min-w-[160px] border-b border-slate-100 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.05)]">
                                             <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">比較項目</span>
                                         </th>
                                         
@@ -267,9 +427,14 @@
                                                     {tier.icon}
                                                 </div>
                                                 
-                                                <button className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all hover:-translate-y-0.5 active:translate-y-0 ${tier.btnStyle}`}>
-                                                    選擇方案
-                                                </button>
+                                                <a 
+                                                    href={targetUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={`block w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 no-underline hover:text-white ${tier.btnStyle}`}
+                                                >
+                                                    立刻加入
+                                                </a>
                                             </th>
                                         ))}
                                     </tr>
@@ -279,7 +444,7 @@
                                     {rows.map((section, sIndex) => (
                                         <React.Fragment key={section.category}>
                                             <tr className="bg-slate-50/80">
-                                                <td className="sticky left-0 z-10 bg-slate-50 p-3 pl-6 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider">
+                                                <td className="sticky left-0 z-20 bg-slate-50 p-3 pl-6 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider shadow-[4px_0_24px_-4px_rgba(0,0,0,0.05)]">
                                                     {section.category}
                                                 </td>
                                                 <td colSpan={5} className="p-3 border-b border-slate-100"></td>
@@ -287,21 +452,21 @@
 
                                             {section.items.map((row, rIndex) => (
                                                 <tr key={rIndex} className="group hover:bg-slate-50/50 transition-colors">
-                                                    <td className="sticky left-0 z-10 bg-white group-hover:bg-slate-50/50 p-4 pl-6 border-b border-slate-100 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.02)]">
+                                                    <td className="sticky left-0 z-20 bg-white group-hover:bg-slate-50/50 p-4 pl-6 border-b border-slate-100 shadow-[4px_0_24px_-4px_rgba(0,0,0,0.05)]">
                                                         <div className="flex flex-col">
                                                             <span className="font-medium text-slate-700">{row.label}</span>
-                                                            {row.note && <span className="text-[10px] text-rose-500 mt-1">{row.note}</span>}
+                                                            {row.note && <span className="text-[10px] text-rose-500 mt-1 font-medium">{row.note}</span>}
                                                         </div>
                                                     </td>
                                                     
                                                     {tiers.map((tier, tIndex) => {
                                                         const isVVIP = tier.id === 'vvip';
                                                         const bgClass = isVVIP 
-                                                            ? 'bg-amber-50/30 border-slate-100' 
+                                                            ? 'bg-amber-50/20 border-slate-100' 
                                                             : 'bg-white border-slate-100 group-hover:bg-slate-50/50';
 
                                                         return (
-                                                            <td key={tIndex} className={`p-4 border-b text-center align-middle ${bgClass} ${isVVIP ? 'shadow-[inset_2px_0_10px_-4px_rgba(251,191,36,0.05)]' : ''}`}>
+                                                            <td key={tIndex} className={`p-4 border-b text-center align-middle ${bgClass} ${isVVIP ? 'shadow-[inset_2px_0_20px_-4px_rgba(251,191,36,0.05)]' : ''}`}>
                                                                 {renderCell(row.values[tIndex], row.type, tIndex)}
                                                             </td>
                                                         );
@@ -315,60 +480,113 @@
                         </div>
                     </div>
 
-                    <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
-                            <div className="p-3 bg-blue-50 text-blue-600 rounded-lg flex-shrink-0">
+                    {/* Feature & Info Cards */}
+                    <div className="max-w-7xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                         <div className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow w-full">
+                            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl flex-shrink-0">
                                 <Icons.Shield className="w-6 h-6" />
                             </div>
-                            <div>
+                            <div className="min-w-0 flex-1">
                                 <h4 className="font-bold text-slate-900 mb-2">包爽保險機制</h4>
-                                <p className="text-slate-600 text-sm leading-relaxed mb-2">
+                                <p className="text-slate-600 text-sm leading-relaxed mb-3">
                                     消費時不滿意立即反應，溝通無效立退現金。
                                     <span className="block mt-1 font-medium text-blue-700">高階版退 $500 / VVIP版退 $600</span>
                                 </p>
-                                <p className="text-xs text-slate-400">* 務必於消費時間內立即反應，離場後不接受申訴。</p>
+                                <div className="flex items-start gap-1 text-xs text-rose-500 bg-rose-50 px-2 py-1 rounded w-fit max-w-full">
+                                    <Icons.Info className="w-3 h-3 flex-shrink-0 mt-0.5" />
+                                    <span>務必於消費時間內立即反應，離場後不接受申訴</span>
+                                </div>
                             </div>
                         </div>
                         
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
-                            <div className="p-3 bg-amber-50 text-amber-600 rounded-lg flex-shrink-0">
+                        <div className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow w-full">
+                            <div className="p-3 bg-amber-50 text-amber-600 rounded-xl flex-shrink-0">
                                 <Icons.Zap className="w-6 h-6" />
                             </div>
-                            <div>
-                                <h4 className="font-bold text-slate-900 mb-2">2026 新版升級重點</h4>
-                                <ul className="text-slate-600 text-sm space-y-2 list-none">
+                            <div className="min-w-0 flex-1">
+                                <h4 className="font-bold text-slate-900 mb-3">2026 新版升級重點</h4>
+                                <ul className="text-slate-600 text-sm space-y-2.5">
                                     <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">核心價值重塑</span>：折扣券正式定義成贈品，資訊和保險才是核心價值。</span>
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">•</span>
+                                        <span><span className="font-bold text-slate-800">核心價值</span>：折扣券定義為贈品，資訊和保險是本體。</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">選擇暴增</span>：優惠券數量增加，全合作店家可用，每日超過 30 種選擇。</span>
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">•</span>
+                                        <span><span className="font-bold text-slate-800">選擇暴增</span>：每日超過 30 種選擇，全合作店家可用。</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">權益下放</span>：中階會員現在也能提早三天知道誰將過來。</span>
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">•</span>
+                                        <span><span className="font-bold text-slate-800">權益下放</span>：中階會員可提早三天預覽名單。</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">保險升級</span>：高階以上方案新增包爽保險。</span>
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">•</span>
+                                        <span><span className="font-bold text-slate-800">保險升級</span>：高階以上新增包爽保險。</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">收入機制</span>：新增了回報現金獎勵與成交抽成+聯盟行銷等被動收入。</span>
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">•</span>
+                                        <span><span className="font-bold text-slate-800">收入機制</span>：回報現金獎勵 + 成交抽成 + 聯盟行銷。</span>
                                     </li>
                                     <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">VVIP 尊榮</span>：年度 VVIP 有優先的 $1000 指定開箱補貼。</span>
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">•</span>
+                                        <span><span className="font-bold text-slate-800">VVIP 尊榮</span>：優先享有 $1000 指定開箱補貼。</span>
                                     </li>
-                                    <li className="flex items-start gap-2">
-                                        <span className="text-amber-500 mt-0.5">•</span>
-                                        <span><span className="font-medium text-slate-900">使用規範</span>：支持訂閱並在訂閱期內使用優惠券。</span>
+                                    <li className="flex items-start gap-2 pt-2 border-t border-slate-100">
+                                        <span className="text-amber-500 mt-1 flex-shrink-0">⚠️</span>
+                                        <span className="text-slate-500">使用規範：支持訂閱並在訂閱期內使用優惠券。</span>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+
+                    {/* Bottom Strong CTA (Black & Red Design) */}
+                    <div className="mt-16 mb-8 text-center px-4 w-full">
+                        <div className="max-w-3xl mx-auto bg-slate-900 rounded-3xl p-6 py-10 md:p-14 shadow-2xl relative overflow-hidden group border-2 border-red-900">
+                            
+                            {/* 警示效果 */}
+                            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-red-600/20 border border-red-500 px-4 py-1 rounded-full animate-pulse z-20">
+                                <Icons.Alert className="w-4 h-4 text-red-500" />
+                                <span className="text-red-400 font-bold text-xs md:text-sm tracking-widest uppercase">Price Hike Alert</span>
+                            </div>
+
+                            {/* Background Effects */}
+                            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-red-600 rounded-full blur-[100px] opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                            
+                            <h2 className="text-2xl md:text-4xl font-black text-white mb-2 relative z-10 break-words pt-4">
+                                漲價倒數中！錯過不再有
+                            </h2>
+
+                            <BigCountdownTimer />
+                            
+                            <p className="text-slate-300 mb-8 text-base md:text-lg relative z-10 px-2 font-medium">
+                                <span className="text-red-400">⚠️ 最後警告：</span> 
+                                2/17 改版前，把握<span className="text-white font-bold border-b border-red-500 pb-0.5 mx-1">舊版優惠價格</span>
+                                鎖定完整的專屬權益與保障！
+                            </p>
+                            
+                            <a 
+                                href={targetUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-red-500 text-white font-black py-5 px-12 rounded-full shadow-[0_10px_30px_rgba(220,38,38,0.5)] hover:shadow-[0_10px_40px_rgba(220,38,38,0.7)] hover:-translate-y-1 hover:scale-105 transition-all transform text-xl relative z-10 no-underline max-w-full animate-heartbeat"
+                            >
+                                <span className="whitespace-nowrap">立刻以舊價加入</span>
+                                <Icons.ArrowRight className="w-6 h-6 flex-shrink-0" />
+                            </a>
+                            
+                            <div className="mt-4 text-slate-500 text-xs relative z-10">
+                                * 2/17 00:00 準時調漲，系統自動生效不予補救
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="text-center text-xs text-slate-400 pb-20 md:pb-10">
+                        &copy; 2026 會員方案中心. All rights reserved.
+                    </div>
+
+                    {/* Mobile Sticky Footer */}
+                    <StickyMobileFooter targetUrl={targetUrl} />
                 </div>
             );
         };
