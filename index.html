@@ -186,9 +186,9 @@
                             <span className="text-[10px] font-bold text-red-400 tracking-wider whitespace-nowrap">優惠倒數</span>
                         </div>
                         <div className="flex items-baseline text-white font-mono leading-none">
-                            <span className="text-xl font-bold text-white mr-0.5">{timeLeft.days}</span>
-                            <span className="text-xs text-slate-400 mr-2 font-sans">天</span>
-                            <span className="text-lg font-bold tracking-widest text-red-50 tabular-nums">
+                            <span className="text-xl font-bold text-red-500 mr-0.5">{timeLeft.days}</span>
+                            <span className="text-xs text-red-400 mr-2 font-sans">天</span>
+                            <span className="text-lg font-bold tracking-widest text-red-500 tabular-nums">
                                 {pad(timeLeft.hours)}:{pad(timeLeft.minutes)}:{pad(timeLeft.seconds)}
                             </span>
                         </div>
@@ -298,7 +298,24 @@
                     category: '優惠權益',
                     items: [
                         { label: '優惠票數', values: ['0', '2', '3', '3', '5'] },
-                        { label: '優惠折扣', values: ['-', '任意 100', '合作200\n自家300', '合作300\n自家500', '合作300\n自家 500-700'] },
+                        { 
+                            label: '優惠折扣', 
+                            values: billing === 'monthly'
+                                ? [
+                                    '-', 
+                                    '任意 -100', 
+                                    <div className="flex flex-col items-center gap-0.5"><span className="text-indigo-700 font-bold whitespace-nowrap">自家 -300~-400</span><span className="text-slate-400 text-[10px] whitespace-nowrap">合作 -200</span></div>,
+                                    <div className="flex flex-col items-center gap-0.5"><span className="text-violet-700 font-bold whitespace-nowrap">自家 -400~-500</span><span className="text-slate-400 text-[10px] whitespace-nowrap">合作 -300</span></div>,
+                                    <div className="flex flex-col items-center gap-0.5"><span className="text-amber-700 font-bold whitespace-nowrap">自家 -500~-600</span><span className="text-slate-400 text-[10px] whitespace-nowrap">合作 -300</span></div>
+                                  ]
+                                : [
+                                    '-', 
+                                    '任意 -100', 
+                                    <div className="flex flex-col items-center gap-0.5"><span className="text-indigo-600 font-bold whitespace-nowrap">自家 -400~-500</span><span className="text-slate-400 text-[10px] whitespace-nowrap">合作 -200</span></div>,
+                                    <div className="flex flex-col items-center gap-0.5"><span className="text-violet-600 font-bold whitespace-nowrap">自家 -500~-600</span><span className="text-slate-400 text-[10px] whitespace-nowrap">合作 -300</span></div>,
+                                    <div className="flex flex-col items-center gap-0.5"><span className="text-amber-600 font-bold whitespace-nowrap">自家 -500~-700</span><span className="text-slate-400 text-[10px] whitespace-nowrap">合作 -300</span></div>
+                                  ]
+                        },
                         { label: '折扣券期限', values: ['-', '30天', '40天', '50天', '60天'] },
                         { label: '朋友共享', type: 'boolean', values: [false, false, true, true, true], note: 'VVIP限訂閱朋友' },
                     ]
@@ -314,9 +331,9 @@
                             values: [
                                 '-', 
                                 '-', 
-                                ['21%折扣', '折扣券延至185天', '積分升級'], 
-                                ['🔥 年度限量 40 組', '包爽保險', '折扣券延至365天'], 
-                                ['🔥 年度限量 30 組', '好友推坑工具', '包爽保險 Plus', '指定開箱1000補貼/月'] 
+                                ['21%折扣', '折扣券延至185天', '積分升級', '優惠折扣增加'], 
+                                ['🔥 年度限量 40 組', '包爽保險', '折扣券延至365天', '優惠折扣增加'], 
+                                ['🔥 年度限量 30 組', '好友推坑工具', '包爽保險 Plus', '指定開箱1000補貼/月', '優惠折扣增加'] 
                             ] 
                         },
                     ]
@@ -334,6 +351,11 @@
             const renderCell = (value, type, tierIndex) => {
                 const tier = tiers[tierIndex];
                 const isVVIP = tier.id === 'vvip';
+
+                // Handle Object Values (React Elements)
+                if (typeof value === 'object' && value !== null && !Array.isArray(value) && React.isValidElement(value)) {
+                    return value;
+                }
 
                 // 特別處理價格欄位
                 if (type === 'price') {
@@ -668,53 +690,49 @@
                         </div>
                     </div>
 
-                    {/* Bottom Strong CTA */}
-                    <div className="mt-16 mb-8 text-center px-4 w-full">
-                        <div className="max-w-3xl mx-auto bg-slate-900 rounded-3xl p-6 py-10 md:p-14 shadow-2xl relative overflow-hidden group border-2 border-red-600">
+                    {/* Bottom Strong CTA - Red Alert Style */}
+                    <div className="mt-10 md:mt-16 mb-8 text-center px-1 md:px-4 w-full">
+                        <div className="max-w-3xl mx-auto bg-slate-950 rounded-2xl md:rounded-3xl p-6 py-8 md:py-10 md:p-14 shadow-2xl relative overflow-hidden group border-2 border-red-600">
                             
                             {/* 警示效果 */}
-                            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-red-600/20 border border-red-500 px-4 py-1 rounded-full animate-pulse z-20">
-                                <Icons.Alert className="w-4 h-4 text-red-500" />
-                                <span className="text-red-400 font-bold text-xs md:text-sm tracking-widest uppercase">Price Hike Alert</span>
+                            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-red-600/20 border border-red-500 px-3 py-1 rounded-full animate-pulse z-20 w-max">
+                                <Icons.Alert className="w-3 h-3 md:w-4 md:h-4 text-red-500" />
+                                <span className="text-red-400 font-bold text-[10px] md:text-sm tracking-widest uppercase">Price Hike Alert</span>
                             </div>
 
                             {/* Background Effects */}
                             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
                             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-red-600 rounded-full blur-[100px] opacity-20 group-hover:opacity-30 transition-opacity"></div>
                             
-                            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 relative z-10 break-words pt-4">
-                                準備好享受最完整的會員權益了嗎？
+                            <h2 className="text-xl md:text-4xl font-black text-white mb-2 relative z-10 break-words pt-4">
+                                漲價倒數中！錯過不再有
                             </h2>
-                            <p className="text-slate-300 mb-8 text-lg relative z-10 font-medium">
-                                2/17前，使用舊版便宜價格鎖定專屬特權與保障。
-                            </p>
 
                             <UrgentCountdownTimer />
                             
-                            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 mb-8 relative z-10 max-w-xl mx-auto backdrop-blur-sm">
-                                <p className="text-amber-400 text-sm md:text-base flex items-center justify-center gap-2">
-                                    <Icons.Alert className="w-4 h-4 md:w-5 md:h-5 animate-pulse" />
-                                    <span>最後倒數：2/17 改版前，把握舊版優惠價格，鎖定完整的專屬權益與保障！</span>
-                                </p>
-                            </div>
+                            <p className="text-slate-300 mb-6 md:mb-8 text-sm md:text-lg relative z-10 px-2 font-medium">
+                                <span className="text-red-400">⚠️ 最後警告：</span> 
+                                2/17 改版前，把握<span className="text-white font-bold border-b border-red-500 pb-0.5 mx-1">舊版優惠價格</span>
+                                鎖定完整的專屬權益與保障！
+                            </p>
                             
                             <a 
                                 href={targetUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-rose-600 text-white font-black py-5 px-12 rounded-full shadow-[0_10px_30px_rgba(220,38,38,0.5)] hover:shadow-[0_10px_40px_rgba(220,38,38,0.7)] hover:-translate-y-1 hover:scale-105 transition-all transform text-xl relative z-10 no-underline max-w-full animate-heartbeat"
+                                className="inline-flex items-center gap-2 md:gap-3 bg-gradient-to-r from-red-600 to-rose-600 text-white font-black py-4 px-8 md:py-5 md:px-12 rounded-full shadow-[0_10px_30px_rgba(220,38,38,0.5)] hover:shadow-[0_10px_40px_rgba(220,38,38,0.7)] hover:-translate-y-1 hover:scale-105 transition-all transform text-lg md:text-xl relative z-10 no-underline max-w-full animate-heartbeat"
                             >
                                 <span className="whitespace-nowrap">立刻以舊價加入</span>
-                                <Icons.ArrowRight className="w-6 h-6 flex-shrink-0" />
+                                <Icons.ArrowRight className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
                             </a>
                             
-                            <div className="mt-4 text-slate-500 text-xs relative z-10">
+                            <div className="mt-4 text-slate-500 text-[10px] md:text-xs relative z-10">
                                 * 2/17 00:00 準時調漲，系統自動生效不予補救
                             </div>
                         </div>
                     </div>
                     
-                    <div className="text-center text-xs text-slate-400 pb-20 md:pb-10">
+                    <div className="text-center text-xs text-slate-400 pb-16 md:pb-10">
                         &copy; 2026 會員方案中心. All rights reserved.
                     </div>
 
